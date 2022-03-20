@@ -3,8 +3,30 @@
 pragma solidity ^0.8.0;
 
 contract Transactions {
-    uint256 transactionCounter;
+    uint256 transactionCount;
 
-    event Transfer (address from, address receiver )
+    event Transfer (address from, address receiver, uint amount, string message, uint256 timestamp, string keyword);
 
+    struct TransferSystem{
+        address sender;
+        address receiver;
+        uint amount;
+        string message;
+        uint256 timestamp;
+        string keyword;
+    }
+
+    TransferSystem [] transactions;
+
+    function addToBlockchain(address payable receiver, uint amount, string memory message, string memory keyword) public{
+        transactionCount +=1;
+        transactions.push(TransferSystem(msg.sender, receiver, amount, message, block.timestamp, keyword));
+        emit Transfer(msg.sender, receiver, amount, message, block.timestamp, keyword);
+    }
+    function getAllTransactions() public view returns (TransferSystem[] memory){
+        return transactions;
+    }
+    function getTransactionCount() public view returns (uint256){
+        return transactionCount;
+    }
 }
